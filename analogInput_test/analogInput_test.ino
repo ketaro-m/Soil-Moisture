@@ -1,4 +1,4 @@
-const int readPin = 13;
+#define readPin 13
 
 float value = 0;
 
