@@ -1,4 +1,4 @@
-#define readPin 13
+#define readPin 34
 
 float value = 0;
 
@@ -10,5 +10,5 @@ void setup() {
 void loop() {
   value = analogRead(readPin);
   Serial.println(value);
-  delay(500);
+  delay(2000);
 }

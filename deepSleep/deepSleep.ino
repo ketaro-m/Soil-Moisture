@@ -1,6 +1,6 @@
 #include <BlynkSimpleEsp32.h>
 
-#define readPin 13
+#define readPin 34
 #define uS_TO_S_FACTOR 1000000 /* Conversion factor for micro seconds to seconds */ 
 #define TIME_TO_SLEEP 5 /* Time ESP32 will go to sleep (in seconds) */
 
