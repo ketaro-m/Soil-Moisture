@@ -9,10 +9,13 @@
 #define switchPin 12
 #define uS_TO_S_FACTOR 1000000 /* Conversion factor for micro seconds to seconds */ 
 #define TIME_TO_SLEEP (29*60+30) /* Time ESP32 will go to sleep (in seconds) */
+#define TIME_TO_WAIT 10 /* Time to wait for wifi connection. */
 // Use Virtual pin 5,6 for uptime display
 #define PIN_UPTIME1 V5 //virtual pin for sensor1
 #define PIN_UPTIME2 V6 //virtual pin for sensor2
 
+// You should get Auth Token in the Blynk App.
+// Go to the Project Settings (nut icon).
 // You should get Auth Token in the Blynk App.
 // Go to the Project Settings (nut icon).
 char auth[] = "YourAuthToken";
@@ -20,7 +23,7 @@ char auth[] = "YourAuthToken";
 // Your WiFi credentials.
 // Set password to "" for open networks.
 char ssid[] = "YourNetworkName";
-char pass[] = "YourPassword"; 
+char pass[] = "YourPassword";
 
 int v1 = 0; //value for sensor1
 int v2 = 0; //value for sensor2
@@ -32,14 +35,20 @@ void setup() {
   delay(9000);
   sensorRead();
   
-  Blynk.begin(auth, ssid, pass);
+  WiFi.begin(ssid, pass);
+  Blynk.config(auth);
+  boolean con = Blynk.connect(); 
+  if (con == 1) {
+    Serial.println("connected");
+    Serial.print("sensor1, 2 = ");Serial.print(v1);Serial.print(", ");Serial.println(v2);
+    Blynk.virtualWrite(PIN_UPTIME1,  v1);
+    Blynk.virtualWrite(PIN_UPTIME2,  v2);
+  } else {
+    Serial.println("connection failed...");
+  }
 
-  Serial.print("sensor1, 2 = ");Serial.print(v1);Serial.print(", ");Serial.println(v2);
-  Blynk.virtualWrite(PIN_UPTIME1,  v1);
-  Blynk.virtualWrite(PIN_UPTIME2,  v2);
   digitalWrite(switchPin, LOW);
   delay(1000);
-
   esp_sleep_enable_timer_wakeup(TIME_TO_SLEEP * uS_TO_S_FACTOR);
   esp_deep_sleep_start();
   delay(1000);
